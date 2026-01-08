@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
@@ -20,6 +21,10 @@ origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
+
+# Add allowed origins from environment variable
+if os.getenv("ALLOWED_ORIGINS"):
+    origins.extend(os.getenv("ALLOWED_ORIGINS").split(","))
 
 app.add_middleware(
     CORSMiddleware,

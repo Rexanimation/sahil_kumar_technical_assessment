@@ -1,0 +1,27 @@
+services:
+  # Frontend Service
+  - type: web
+    name: pipeline-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: pipeline-backend
+          property: url
+
+  # Backend Service
+  - type: web
+    name: pipeline-backend
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ALLOWED_ORIGINS
+        fromService:
+          type: web
+          name: pipeline-frontend
+          property: url

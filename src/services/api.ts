@@ -1,7 +1,6 @@
 import { Node, Edge } from 'reactflow';
 import { ValidationResult } from '@/utils/dagHelpers';
-
-const API_URL = 'http://localhost:8000';
+import { API_URL } from '@/config';
 
 export const pipelineApi = {
   async parsePipeline(nodes: Node[], edges: Edge[]): Promise<ValidationResult> {

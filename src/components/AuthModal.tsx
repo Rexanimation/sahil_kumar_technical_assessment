@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/tabs';
 import { Github, Chrome } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
+import { API_URL } from '@/config';
 
 interface AuthModalProps {
     isOpen: boolean;
@@ -35,7 +36,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'signin' }: AuthModalP
     const handleAuth = async (provider: string) => {
         // Redirect to backend for OAuth
         if (provider === 'google' || provider === 'github') {
-            window.location.href = `http://localhost:8000/auth/login/${provider}`;
+            window.location.href = `${API_URL}/auth/login/${provider}`;
             return;
         }
 
@@ -51,7 +52,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'signin' }: AuthModalP
             }
 
             try {
-                const response = await fetch('http://localhost:8000/auth/register', {
+                const response = await fetch(`${API_URL}/auth/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password }),
@@ -203,7 +204,7 @@ function DeleteAccountDialog({ username, password }: { username?: string, passwo
 
     const handleDelete = async (provider: 'manual' | 'google' | 'github') => {
         if (provider === 'google' || provider === 'github') {
-            window.location.href = `http://localhost:8000/auth/login/${provider}?action=delete`;
+            window.location.href = `${API_URL}/auth/login/${provider}?action=delete`;
             return;
         }
 
@@ -219,7 +220,7 @@ function DeleteAccountDialog({ username, password }: { username?: string, passwo
             }
 
             try {
-                const response = await fetch('http://localhost:8000/auth/delete', {
+                const response = await fetch(`${API_URL}/auth/delete`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password }),
