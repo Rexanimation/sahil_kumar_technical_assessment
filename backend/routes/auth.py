@@ -45,6 +45,12 @@ async def delete_account(user: UserDelete):
     del fake_users_db[user.username]
     return {"message": "Account deleted successfully"}
 
+@router.post("/auth/logout")
+async def logout():
+    response = JSONResponse(content={"message": "Logged out successfully"})
+    response.delete_cookie("access_token")
+    return response
+
 @router.get("/auth/login/{provider}")
 async def login(provider: str, action: str = "login"):
     # Pass 'action' as the state parameter to preserve it through the OAuth dance
@@ -65,16 +71,14 @@ async def login(provider: str, action: str = "login"):
     else:
         raise HTTPException(status_code=400, detail="Invalid provider")
 
+from utils.security import create_access_token
+
 @router.get("/auth/{provider}/callback")
 async def callback(provider: str, code: str, state: str = "login"):
     username = "User"
     avatar_url = ""
+    email = ""
     action = state
-
-    # If action is delete, verifying the token is enough to prove identity.
-    # We don't actually need to fetch full user info if we are just "deleting" 
-    # (in this mock implementation, there's no DB to delete from for OAuth users, 
-    # but in a real app you'd find the user by their OAuth ID and delete them).
 
     if provider == "google":
         client_id = os.getenv("GOOGLE_CLIENT_ID")
@@ -92,6 +96,9 @@ async def callback(provider: str, code: str, state: str = "login"):
             token_json = token_res.json()
             access_token = token_json.get("access_token")
             
+            if not access_token:
+                return RedirectResponse(f"{FRONTEND_URL}/auth-error?reason=token_error")
+
             if action == "login":
                 # Fetch User Info
                 user_res = await client.get(
@@ -99,6 +106,12 @@ async def callback(provider: str, code: str, state: str = "login"):
                     headers={"Authorization": f"Bearer {access_token}"}
                 )
                 user_data = user_res.json()
+                
+                # 1. Verify Email
+                if not user_data.get("verified_email"):
+                    return RedirectResponse(f"{FRONTEND_URL}/auth-error?reason=email_not_verified")
+                
+                email = user_data.get("email")
                 username = user_data.get("name", "Google User")
                 avatar_url = user_data.get("picture", "")
             
@@ -116,6 +129,9 @@ async def callback(provider: str, code: str, state: str = "login"):
             token_res = await client.post(token_url, headers=headers, data=data)
             token_json = token_res.json()
             access_token = token_json.get("access_token")
+            
+            if not access_token:
+                 return RedirectResponse(f"{FRONTEND_URL}/auth-error?reason=token_error")
 
             if action == "login":
                 # Fetch User Info
@@ -126,11 +142,42 @@ async def callback(provider: str, code: str, state: str = "login"):
                 user_data = user_res.json()
                 username = user_data.get("login") or user_data.get("name", "GitHub User")
                 avatar_url = user_data.get("avatar_url", "")
+                email = user_data.get("email")
+                
+                # 1. Verify Email (GitHub might return null email in profile, so fetch /user/emails)
+                if not email:
+                    emails_res = await client.get(
+                        "https://api.github.com/user/emails",
+                        headers={"Authorization": f"Bearer {access_token}", "Accept": "application/json"}
+                    )
+                    emails_data = emails_res.json()
+                    # Find verified primary email
+                    verified_emails = [e for e in emails_data if e.get("verified") and e.get("primary")]
+                    if not verified_emails:
+                         return RedirectResponse(f"{FRONTEND_URL}/auth-error?reason=email_not_verified")
+                    email = verified_emails[0]["email"]
 
     if action == "delete":
         # In a real app, delete the user here using the access_token/user_info to identify them
-        # Redirect to Home page (port 8080) for deletion confirmation
         return RedirectResponse(f"{FRONTEND_URL}?auth=delete_success")
 
-    # Successful Auth -> Redirect to Frontend with success flag and user info
-    return RedirectResponse(f"{FRONTEND_URL}?auth=success&username={username}&avatar={avatar_url}")
+    # 2. Check Database (Allow generic signup for this assessment, but traditionally check DB here)
+    # user_exists = check_db(email)
+    
+    # 3. Create Session (JWT)
+    access_token_jwt = create_access_token(data={"sub": email, "name": username})
+
+    # 4. Secure Redirect
+    response = RedirectResponse(f"{FRONTEND_URL}/builder?auth=success")
+    
+    # Set HttpOnly Cookie
+    response.set_cookie(
+        key="access_token",
+        value=access_token_jwt,
+        httponly=True,
+        secure=True, # Require HTTPS
+        samesite="lax",
+        max_age=60 * 60 * 24 # 24 hours
+    )
+    
+    return response
