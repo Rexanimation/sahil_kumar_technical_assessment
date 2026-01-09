@@ -194,7 +194,7 @@ async def callback(provider: str, code: str, state: str = "login"):
         value=access_token_jwt,
         httponly=True,
         secure=True, # Require HTTPS
-        samesite="lax",
+        samesite="none", # Allow cross-site requests (frontend -> backend)
         max_age=60 * 60 * 24 # 24 hours
     )
     
