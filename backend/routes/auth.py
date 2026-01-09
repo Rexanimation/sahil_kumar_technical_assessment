@@ -52,20 +52,20 @@ async def login(provider: str, action: str = "login"):
     
     if provider == "google":
         client_id = os.getenv("GOOGLE_CLIENT_ID")
-        redirect_uri = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:8000/auth/callback/google")
+        redirect_uri = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:8000/auth/google/callback")
         return RedirectResponse(
             f"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id={client_id}&redirect_uri={redirect_uri}&scope=openid%20email%20profile&state={state}"
         )
     elif provider == "github":
         client_id = os.getenv("GITHUB_CLIENT_ID")
-        redirect_uri = os.getenv("GITHUB_REDIRECT_URI", "http://localhost:8000/auth/callback/github")
+        redirect_uri = os.getenv("GITHUB_REDIRECT_URI", "http://localhost:8000/auth/github/callback")
         return RedirectResponse(
             f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user%20user:email&state={state}"
         )
     else:
         raise HTTPException(status_code=400, detail="Invalid provider")
 
-@router.get("/auth/callback/{provider}")
+@router.get("/auth/{provider}/callback")
 async def callback(provider: str, code: str, state: str = "login"):
     username = "User"
     avatar_url = ""
@@ -84,7 +84,7 @@ async def callback(provider: str, code: str, state: str = "login"):
             "code": code,
             "client_id": client_id,
             "client_secret": client_secret,
-            "redirect_uri": os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:8000/auth/callback/google"),
+            "redirect_uri": os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:8000/auth/google/callback"),
             "grant_type": "authorization_code",
         }
         async with httpx.AsyncClient() as client:
