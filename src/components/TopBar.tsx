@@ -30,7 +30,7 @@ export default function TopBar({
   className,
 }: TopBarProps) {
   const stressTestCounts = [50, 100, 250, 500, 1000];
-  
+
   return (
     <header
       className={cn(
@@ -40,13 +40,7 @@ export default function TopBar({
     >
       <div className="flex items-center gap-4">
         <Link to="/" className="flex items-center gap-3 group">
-          <motion.div 
-            className="p-2 bg-primary/10 rounded-xl border border-primary/20"
-            whileHover={{ scale: 1.05, rotate: 5 }}
-            transition={{ type: 'spring', stiffness: 400 }}
-          >
-            <Workflow className="w-5 h-5 text-primary" />
-          </motion.div>
+
           <div>
             <h1 className="font-display font-bold text-foreground group-hover:text-primary transition-colors">
               Pipeline Builder
@@ -99,8 +93,8 @@ export default function TopBar({
         </motion.div>
 
         {/* Submit Button */}
-        <motion.div 
-          whileHover={{ scale: 1.02, boxShadow: '0 0 20px hsl(265 89% 62% / 0.3)' }} 
+        <motion.div
+          whileHover={{ scale: 1.02, boxShadow: '0 0 20px hsl(265 89% 62% / 0.3)' }}
           whileTap={{ scale: 0.98 }}
           className="rounded-md"
         >
@@ -112,7 +106,7 @@ export default function TopBar({
           >
             {isValidating ? (
               <>
-                <motion.div 
+                <motion.div
                   className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}

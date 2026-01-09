@@ -6,6 +6,7 @@ import MathNode from './MathNode';
 import DelayNode from './DelayNode';
 import MergeNode from './MergeNode';
 import ConditionNode from './ConditionNode';
+import NoteNode from './NoteNode';
 
 export const nodeTypes = {
   inputNode: InputNode,
@@ -16,6 +17,7 @@ export const nodeTypes = {
   delayNode: DelayNode,
   mergeNode: MergeNode,
   conditionNode: ConditionNode,
+  noteNode: NoteNode,
 };
 
 export interface NodeTypeConfig {
@@ -82,5 +84,12 @@ export const nodeTypeConfigs: NodeTypeConfig[] = [
     description: 'Branch based on logic',
     icon: 'GitBranch',
     accentClass: 'icon-condition',
+  },
+  {
+    type: 'noteNode',
+    label: 'Note',
+    description: 'Add a sticky note',
+    icon: 'StickyNote',
+    accentClass: 'text-yellow-500',
   },
 ];
