@@ -1,22 +1,27 @@
-# Pipeline UI Project - Technical Assessment
+# VectorShift Frontend Assessment
 
-A React-based Node Pipeline UI with a FastAPI backend, capable of creating, connecting, and validating variable-based nodes.
+## Overview
+A frontend-focused pipeline builder that allows users to construct and validate DAG-based workflows.
 
-## 🚀 Features
+## Features
+- **Node Abstraction**: Reusable base node component (`BaseNode.tsx`) simplifying creation of new node types.
+- **Dynamic Text Nodes**: Text nodes that auto-resize and support `{{variable}}` handle creation.
+- **DAG Validation**: Backend integration to validate pipeline structure and prevent cycles.
+- **Modern UI**: "Premium Dark Theme" with glassmorphism effects using React Flow and Tailwind CSS.
+- **5 Custom Nodes**: Input, Output, LLM, Text, Math, Delay, Merge, Condition, and Note.
 
-- **Draggable Nodes**: Create and connect nodes in a visual editor.
-- **Dynamic Text Nodes**: Supports `{{variable}}` syntax with auto-generated input handles.
-- **Backend Validation**: FastAPI backend validates the pipeline structure (DAG) and counts nodes/edges.
-- **Modern UI**: Built with React Flow, Tailwind CSS, and Shadcn UI.
+## Design Decisions
+- **Minimal UI**: Prioritized usability for non-technical users with a clean sidebar and intuitive drag-and-drop.
+- **Backend Validation**: Limited backend scope to structure validation (`dag.py`) rather than full execution to focus on frontend interactivity.
+- **Abstraction**: Used a config-driven approach (`nodeConfigs`) to register new nodes without boilerplate.
 
 ## 🛠️ Tech Stack
-
-- **Frontend**: React, Vite, TypeScript, React Flow, Tailwind CSS
-- **Backend**: Python, FastAPI, NetworkX (for DAG checks)
+- **Frontend**: React, Vite, TypeScript, React Flow, Tailwind CSS, Shadcn UI
+- **Backend**: Python, FastAPI, NetworkX
 
 ## 📦 Installation & Setup
 
-### 1. Frontend Setup
+### 1. Frontend
 ```bash
 # Install dependencies
 npm install
@@ -25,7 +30,7 @@ npm install
 npm run dev
 ```
 
-### 2. Backend Setup
+### 2. Backend
 ```bash
 cd backend
 
@@ -45,21 +50,10 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-## 🌐 Application Flow
+## Environment Variables
+Sensitive values are intentionally omitted. See `.env.example`.
 
-1.  **Design**: User drags and connects nodes on the canvas.
-2.  **Submit**: Clicking "Submit" sends the graph topology (nodes & edges) to the backend.
-3.  **Validate**: The backend (`dags.py`) ensures the graph is a Directed Acyclic Graph (DAG) using DFS.
-4.  **Response**: Frontend receives the cycle status, node count, and edge count to display to the user.
+## Future Improvements
+- **Pipeline execution engine**: Actually processing data through the nodes.
+- **AI tool integrations**: Connecting real LLM APIs to the LLM Node.
 
-## 🚀 Deployment
-
-Live Demo: [INSERT_DEPLOYMENT_LINK_HERE]
-
-## 🔐 Environment Variables
-
-Copy `.env.example` to `.env` and fill in your credentials for authentication features (if applicable).
-
-```bash
-cp .env.example .env
-```
