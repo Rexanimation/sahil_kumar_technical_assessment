@@ -35,7 +35,8 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'signin' }: AuthModalP
     const handleAuth = async (provider: string) => {
         // Redirect to backend for OAuth
         if (provider === 'google' || provider === 'github') {
-            window.location.href = `http://localhost:8000/auth/login/${provider}`;
+            const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+            window.location.href = `${apiUrl}/auth/login/${provider}`;
             return;
         }
 
@@ -51,7 +52,8 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'signin' }: AuthModalP
             }
 
             try {
-                const response = await fetch('http://localhost:8000/auth/register', {
+                const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+                const response = await fetch(`${apiUrl}/auth/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password }),
@@ -203,7 +205,8 @@ function DeleteAccountDialog({ username, password }: { username?: string, passwo
 
     const handleDelete = async (provider: 'manual' | 'google' | 'github') => {
         if (provider === 'google' || provider === 'github') {
-            window.location.href = `http://localhost:8000/auth/login/${provider}?action=delete`;
+            const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+            window.location.href = `${apiUrl}/auth/login/${provider}?action=delete`;
             return;
         }
 
@@ -219,7 +222,8 @@ function DeleteAccountDialog({ username, password }: { username?: string, passwo
             }
 
             try {
-                const response = await fetch('http://localhost:8000/auth/delete', {
+                const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+                const response = await fetch(`${apiUrl}/auth/delete`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password }),
