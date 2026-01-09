@@ -1,8 +1,7 @@
 import Canvas from '@/components/Canvas';
 import { Button } from '@/components/ui/button';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 import { LogOut, User } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface UserInfo {
@@ -11,45 +10,11 @@ interface UserInfo {
 }
 
 export default function Builder() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const { user, logout } = useAuth();
 
-  useEffect(() => {
-    // Check for auth callback params
-    const authSuccess = searchParams.get('auth') === 'success';
-    const username = searchParams.get('username');
-    const avatar = searchParams.get('avatar');
+  // Note: Local state management for user is no longer needed 
+  // as it is handled by AuthContext via /auth/me
 
-    if (authSuccess) {
-      localStorage.setItem('isAuthenticated', 'true');
-
-      if (username) {
-        const user = { name: username, avatar: avatar || '' };
-        localStorage.setItem('user', JSON.stringify(user));
-        setUserInfo(user);
-      }
-
-      // Clear query param
-      navigate('/builder', { replace: true });
-    } else {
-      // Load user from local storage
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        try {
-          setUserInfo(JSON.parse(storedUser));
-        } catch (e) {
-          console.error("Failed to parse user info", e);
-        }
-      }
-    }
-  }, [searchParams, navigate]);
-
-  const handleSignOut = () => {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('user');
-    navigate('/');
-  };
 
   return (
     <div className="h-screen flex flex-col">
@@ -57,17 +22,17 @@ export default function Builder() {
         <span className="font-display font-bold">Pipeline Builder</span>
 
         <div className="flex items-center gap-4">
-          {userInfo && (
+          {user && (
             <div className="flex items-center gap-2">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={userInfo.avatar} alt={userInfo.name} />
-                <AvatarFallback>{userInfo.name.charAt(0).toUpperCase()}</AvatarFallback>
+                <AvatarImage src={""} alt={user.username} />
+                <AvatarFallback>{user.username.charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
-              <span className="text-sm font-medium">{userInfo.name}</span>
+              <span className="text-sm font-medium">{user.username}</span>
             </div>
           )}
 
-          <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2">
+          <Button variant="ghost" size="sm" onClick={logout} className="gap-2">
             <LogOut className="w-4 h-4" />
             Sign Out
           </Button>

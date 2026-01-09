@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Search,
+  StickyNote,
 } from 'lucide-react';
 import { nodeTypeConfigs } from '@/nodes';
 import { cn } from '@/lib/utils';
@@ -26,6 +27,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Clock,
   GitMerge,
   GitBranch,
+  StickyNote,
 };
 
 interface SidebarProps {
