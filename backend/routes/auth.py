@@ -45,6 +45,24 @@ async def delete_account(user: UserDelete):
     del fake_users_db[user.username]
     return {"message": "Account deleted successfully"}
 
+from utils.security import decode_access_token
+from fastapi import Cookie
+
+@router.get("/auth/me")
+async def get_current_user(access_token: str = Cookie(None)):
+    if not access_token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    payload = decode_access_token(access_token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid token")
+        
+    return {
+        "email": payload.get("sub"),
+        "username": payload.get("name"),
+        # Add other user fields as needed
+    }
+
 @router.post("/auth/logout")
 async def logout():
     response = JSONResponse(content={"message": "Logged out successfully"})
