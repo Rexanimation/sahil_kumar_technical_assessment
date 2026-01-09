@@ -94,7 +94,7 @@ export default function StatusBar({ result, nodeCount = 0, className }: StatusBa
   return (
     <footer
       className={cn(
-        'h-12 bg-card/80 backdrop-blur-md border-t border-border flex items-center px-6 relative',
+        'h-12 bg-card/80 backdrop-blur-md border-t border-border flex items-center px-4 md:px-6 relative',
         className
       )}
     >
@@ -104,36 +104,38 @@ export default function StatusBar({ result, nodeCount = 0, className }: StatusBa
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="flex items-center gap-6 w-full"
+          className="flex items-center justify-between w-full"
         >
-          <motion.div
-            className={cn('status-badge', config.bg, config.text, config.glow)}
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring', stiffness: 300 }}
-          >
-            <Icon className="w-3.5 h-3.5" />
-            {config.label}
-          </motion.div>
+          <div className="flex items-center gap-3 md:gap-6 flex-1 min-w-0">
+            <motion.div
+              className={cn('status-badge shrink-0', config.bg, config.text, config.glow)}
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
+              <Icon className="w-3.5 h-3.5" />
+              {config.label}
+            </motion.div>
 
-          <p className="text-sm text-foreground flex-1 font-medium">{result.message}</p>
+            <p className="text-sm text-foreground flex-1 font-medium truncate">{result.message}</p>
+          </div>
 
-          <div className="flex items-center gap-6 text-xs font-mono">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 md:gap-6 text-xs font-mono shrink-0 ml-2">
+            <div className="hidden sm:flex items-center gap-2">
               <span className="text-muted-foreground">Nodes</span>
               <span className="text-primary font-bold">{result.numNodes.toLocaleString()}</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2">
               <span className="text-muted-foreground">Edges</span>
               <span className="text-primary font-bold">{result.numEdges.toLocaleString()}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-muted-foreground">DAG</span>
+              <span className="text-muted-foreground hidden sm:inline">DAG</span>
               <span className={cn(
                 'font-bold',
                 result.isDAG ? 'text-success' : 'text-destructive'
               )}>
-                {result.isDAG ? 'TRUE' : 'FALSE'}
+                {result.isDAG ? 'VALID' : 'INVALID'}
               </span>
             </div>
           </div>

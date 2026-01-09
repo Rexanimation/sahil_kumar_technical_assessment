@@ -241,14 +241,14 @@ export default function Home() {
             </motion.div>
 
             {/* Main Heading */}
-            <h1 className="text-5xl md:text-7xl font-display font-bold mb-8 leading-tight tracking-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold mb-6 md:mb-8 leading-tight tracking-tight px-2">
               <AnimatedText text="Build Powerful Pipelines" />
               <br />
               <motion.span
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
-                className="relative inline-block"
+                className="relative inline-block mt-2 md:mt-0"
               >
                 <span className="text-gradient-primary">Visually</span>
                 <motion.span
@@ -266,7 +266,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.6 }}
-              className="text-xl text-muted-foreground mb-10 max-w-3xl mx-auto leading-relaxed"
+              className="text-lg md:text-xl text-muted-foreground mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed px-4"
             >
               Create, connect, and validate complex workflows with our intuitive
               drag-and-drop interface. <span className="text-foreground font-medium">Handle thousands of nodes</span> with
@@ -278,19 +278,20 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.7 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+              className="flex flex-col sm:flex-row gap-4 justify-center mb-12 px-4"
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto"
               >
-                <Button size="lg" className="gap-3 text-lg px-8 py-6 font-semibold" onClick={() => { }}>
+                <Button size="lg" className="w-full sm:w-auto gap-3 text-lg px-8 py-6 font-semibold" onClick={() => { }}>
                   <Lock className="w-5 h-5" />
                   Privacy
                 </Button>
               </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="lg" className="gap-3 text-lg px-8 py-6" onClick={() => { }}>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto gap-3 text-lg px-8 py-6" onClick={() => { }}>
                   <FileText className="w-5 h-5" />
                   Policy
                 </Button>
@@ -302,7 +303,7 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.9 }}
-              className="flex flex-wrap justify-center gap-8 mb-16"
+              className="flex flex-wrap justify-center gap-4 md:gap-8 mb-16 px-4"
             >
               {benefits.map((benefit, index) => (
                 <motion.div
@@ -310,13 +311,14 @@ export default function Home() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1 + index * 0.1 }}
-                  className="flex items-center gap-2 text-muted-foreground"
+                  className="flex items-center gap-2 text-muted-foreground text-sm md:text-base"
                 >
-                  <benefit.icon className="w-5 h-5 text-primary" />
+                  <benefit.icon className="w-4 h-4 md:w-5 md:h-5 text-primary" />
                   <span className="font-medium">{benefit.text}</span>
                 </motion.div>
               ))}
             </motion.div>
+
 
             {/* Node Types Preview */}
             <motion.div
@@ -385,7 +387,7 @@ export default function Home() {
               </motion.p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto px-4">
               {features.map((feature, index) => (
                 <motion.div
                   key={feature.title}
@@ -403,7 +405,7 @@ export default function Home() {
                     boxShadow: '0 24px 48px -12px hsl(230 25% 4% / 0.5)',
                     borderColor: 'hsl(265 89% 62% / 0.5)',
                   }}
-                  className="p-8 rounded-2xl bg-card border border-border transition-all group"
+                  className="p-6 md:p-8 rounded-2xl bg-card border border-border transition-all group"
                 >
                   <motion.div
                     className="p-4 bg-primary/10 rounded-xl w-fit mb-6"
@@ -415,7 +417,7 @@ export default function Home() {
                   <h3 className="font-display font-bold text-lg mb-3 group-hover:text-primary transition-colors">
                     {feature.title}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
                     {feature.description}
                   </p>
                 </motion.div>
@@ -425,9 +427,9 @@ export default function Home() {
         </section>
 
         {/* Stats Section */}
-        <section className="border-t border-border py-20">
+        <section className="border-t border-border py-12 md:py-20">
           <div className="container mx-auto px-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 max-w-5xl mx-auto">
               {[
                 { value: '8+', label: 'Node Types' },
                 { value: '1000+', label: 'Nodes Supported' },
