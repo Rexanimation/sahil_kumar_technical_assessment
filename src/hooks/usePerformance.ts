@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { Node, Edge } from 'reactflow';
 
 // Generate unique IDs efficiently
@@ -25,7 +25,7 @@ export function useVirtualizedNodes(
 ) {
   return useMemo(() => {
     if (nodes.length < 100) return nodes; // Skip virtualization for small graphs
-    
+
     const padding = 200; // Extra padding for smooth scrolling
     const viewBounds = {
       minX: -viewport.x / viewport.zoom - padding,
@@ -33,12 +33,12 @@ export function useVirtualizedNodes(
       minY: -viewport.y / viewport.zoom - padding,
       maxY: (-viewport.y + containerSize.height) / viewport.zoom + padding,
     };
-    
+
     return nodes.filter((node) => {
       const { x, y } = node.position;
       const nodeWidth = 280; // Max node width
       const nodeHeight = 150; // Estimated node height
-      
+
       return (
         x + nodeWidth >= viewBounds.minX &&
         x <= viewBounds.maxX &&
@@ -54,8 +54,8 @@ export function useDebounce<T extends (...args: unknown[]) => void>(
   callback: T,
   delay: number
 ): T {
-  const timeoutRef = { current: null as NodeJS.Timeout | null };
-  
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   return useCallback(
     ((...args: Parameters<T>) => {
       if (timeoutRef.current) {
@@ -74,8 +74,8 @@ export function useThrottle<T extends (...args: unknown[]) => void>(
   callback: T,
   limit: number
 ): T {
-  const lastRun = { current: Date.now() };
-  
+  const lastRun = useRef(Date.now());
+
   return useCallback(
     ((...args: Parameters<T>) => {
       if (Date.now() - lastRun.current >= limit) {
@@ -83,7 +83,7 @@ export function useThrottle<T extends (...args: unknown[]) => void>(
         lastRun.current = Date.now();
       }
     }) as T,
-    [callback, limit]
+    [callback, limit, lastRun]
   );
 }
 
@@ -92,7 +92,7 @@ export function generateTestNodes(count: number, startX = 0, startY = 0): Node[]
   const nodeTypes = ['inputNode', 'outputNode', 'llmNode', 'textNode', 'mathNode', 'delayNode'];
   const cols = Math.ceil(Math.sqrt(count));
   const spacing = { x: 300, y: 200 };
-  
+
   return Array.from({ length: count }, (_, i) => ({
     id: generateNodeId(),
     type: nodeTypes[i % nodeTypes.length],
@@ -107,7 +107,7 @@ export function generateTestNodes(count: number, startX = 0, startY = 0): Node[]
 // Edge generation for test nodes
 export function generateTestEdges(nodes: Node[]): Edge[] {
   const edges: Edge[] = [];
-  
+
   for (let i = 0; i < nodes.length - 1; i++) {
     // Connect to next node in row
     if ((i + 1) % Math.ceil(Math.sqrt(nodes.length)) !== 0) {
@@ -120,6 +120,6 @@ export function generateTestEdges(nodes: Node[]): Edge[] {
       });
     }
   }
-  
+
   return edges;
 }

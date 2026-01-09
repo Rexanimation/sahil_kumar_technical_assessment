@@ -1,20 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Pipeline Builder Design System - Premium Industry-Ready Aesthetic */
-
-/* Premium Fonts - Space Grotesk for headlines, JetBrains Mono for code */
-
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
-
-@font-face {
-  font-family: 'Boxigen';
-  src: url('/fonts/boxigen.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
 
 @layer base {
   :root {
@@ -181,7 +169,7 @@
   h4,
   h5,
   h6 {
-    font-family: 'Boxigen', 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     font-weight: 600;
     letter-spacing: 0.02em;
   }
