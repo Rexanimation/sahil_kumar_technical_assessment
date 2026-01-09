@@ -35,7 +35,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'signin' }: AuthModalP
     const handleAuth = async (provider: string) => {
         // Redirect to backend for OAuth
         if (provider === 'google' || provider === 'github') {
-            const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+            const apiUrl = import.meta.env.VITE_API_BASE_URL;
             window.location.href = `${apiUrl}/auth/login/${provider}`;
             return;
         }
@@ -52,7 +52,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'signin' }: AuthModalP
             }
 
             try {
-                const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+                const apiUrl = import.meta.env.VITE_API_BASE_URL;
                 const response = await fetch(`${apiUrl}/auth/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -205,7 +205,7 @@ function DeleteAccountDialog({ username, password }: { username?: string, passwo
 
     const handleDelete = async (provider: 'manual' | 'google' | 'github') => {
         if (provider === 'google' || provider === 'github') {
-            const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+            const apiUrl = import.meta.env.VITE_API_BASE_URL;
             window.location.href = `${apiUrl}/auth/login/${provider}?action=delete`;
             return;
         }
@@ -222,7 +222,7 @@ function DeleteAccountDialog({ username, password }: { username?: string, passwo
             }
 
             try {
-                const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+                const apiUrl = import.meta.env.VITE_API_BASE_URL;
                 const response = await fetch(`${apiUrl}/auth/delete`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
