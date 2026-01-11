@@ -188,13 +188,16 @@ async def callback(provider: str, code: str, state: str = "login"):
     # 4. Secure Redirect
     response = RedirectResponse(f"{FRONTEND_URL}/builder?auth=success")
     
+    # Determine if we are in production (HTTPS)
+    is_production = "onrender.com" in FRONTEND_URL
+    
     # Set HttpOnly Cookie
     response.set_cookie(
         key="access_token",
         value=access_token_jwt,
         httponly=True,
-        secure=True, # Require HTTPS
-        samesite="none", # Allow cross-site requests (frontend -> backend)
+        secure=is_production, # True only for HTTPS (Production)
+        samesite="lax" if not is_production else "none", # Lax for local, None for cross-site prod
         max_age=60 * 60 * 24 # 24 hours
     )
     
