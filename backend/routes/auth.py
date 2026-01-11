@@ -12,7 +12,7 @@ router = APIRouter()
 
 # Frontend URL to redirect back to
 # Frontend URL to redirect back to
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:8080/builder")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
 # Mock Database for Manual Registration
 fake_users_db = {}  # {username: password}
