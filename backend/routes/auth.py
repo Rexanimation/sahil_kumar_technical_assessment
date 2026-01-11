@@ -74,17 +74,24 @@ async def login(provider: str, action: str = "login"):
     # Pass 'action' as the state parameter to preserve it through the OAuth dance
     state = action 
     
+    import urllib.parse
+    
+    encoded_state = urllib.parse.quote(state)
+    
     if provider == "google":
         client_id = os.getenv("GOOGLE_CLIENT_ID")
         redirect_uri = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:8000/auth/google/callback")
+        encoded_redirect = urllib.parse.quote(redirect_uri, safe="")
         return RedirectResponse(
-            f"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id={client_id}&redirect_uri={redirect_uri}&scope=openid%20email%20profile&state={state}"
+            f"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id={client_id}&redirect_uri={encoded_redirect}&scope=openid%20email%20profile&state={encoded_state}"
         )
     elif provider == "github":
         client_id = os.getenv("GITHUB_CLIENT_ID")
         redirect_uri = os.getenv("GITHUB_REDIRECT_URI", "http://localhost:8000/auth/github/callback")
+        encoded_redirect = urllib.parse.quote(redirect_uri, safe="")
+        print(f"DEBUG GITHUB: client_id={client_id}, redirect_uri={redirect_uri}")
         return RedirectResponse(
-            f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user%20user:email&state={state}"
+            f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={encoded_redirect}&scope=read:user%20user:email&state={encoded_state}"
         )
     else:
         raise HTTPException(status_code=400, detail="Invalid provider")
